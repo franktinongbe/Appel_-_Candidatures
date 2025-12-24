@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import InfoPage from './pages/InfoPage';
+import InfoPage from './pages/infoPage.jsx';
 import InscriptionForm from './components/InscriptionForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
