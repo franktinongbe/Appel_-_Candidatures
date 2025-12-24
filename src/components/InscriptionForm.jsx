@@ -87,7 +87,7 @@ export default function InscriptionForm() {
                 <label className="form-label fw-bold text-secondary small uppercase">Nom Complet *</label>
                 <div className="input-group">
                   <span className="input-group-text bg-white border-end-0 text-muted"><i className="bi bi-person"></i></span>
-                  <input type="text" className="form-control form-control-lg border-start-0 ps-0 fs-6" placeholder="Ex: SOGLO Koffi Jean" required />
+                  <input type="text" className="form-control form-control-lg border-start-0 ps-0 fs-6" placeholder="Ex: BABIO Boni" required />
                 </div>
               </div>
 
