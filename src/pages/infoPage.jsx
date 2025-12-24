@@ -16,99 +16,116 @@ export default function InfoPage() {
   ];
 
   return (
-    <div className="bg-light min-vh-100 py-5">
+    <div className="bg-light min-vh-100 py-5 d-flex align-items-center">
       <div className="container">
-        {/* Header Institutionnel */}
+        
+        {/* --- EN-TÊTE OFFICIEL --- */}
         <div className="text-center mb-5 animate__animated animate__fadeIn">
-          <div className="mb-4 d-inline-block p-2 bg-white rounded-circle shadow-sm">
-             <img src="/logo.jpeg" alt="Logo AMJB" style={{ height: '180px', width: '180px', objectFit: 'contain' }} className="rounded-circle" />
+          <div className="mb-4 d-inline-block p-2 bg-white rounded-circle shadow">
+             <img src="/logo.jpeg" alt="Logo MJB" style={{ height: '140px', width: '140px', objectFit: 'contain' }} className="rounded-circle" />
           </div>
-          <h1 className="display-5 fw-black text-dark mb-2" style={{ letterSpacing: '-1px' }}>APPEL À CANDIDATURE</h1>
-          <h3 className="text-success fw-bold text-uppercase">Mairie des Jeunes de Parakou</h3>
-          <div className="badge bg-warning text-dark fs-6 px-4 py-2 rounded-pill shadow-sm mt-2">
-            Mandature 2025 - 2030
+          <h2 className="fw-bold text-dark mb-1">ASSOCIATION MAIRIE DES JEUNES DU BÉNIN</h2>
+          <p className="text-success fw-bold mb-0">École d'apprentissage de la gestion du pouvoir public</p>
+          <small className="text-muted fw-medium">Autorisation n˚2021/029/PDO/SG/SAG/SA du 10 Mai 2021</small>
+          
+          <div className="mt-4">
+            <h1 className="display-6 fw-bold text-primary mb-0">MAIRIE DES JEUNES DE PARAKOU</h1>
+            <div className="badge bg-danger fs-6 px-4 py-2 rounded-pill shadow-sm mt-2">
+              📣 APPEL À CANDIDATURE : MANDATURE 2025-2030
+            </div>
           </div>
         </div>
 
-        <div className="row g-4">
-          {/* Postes */}
-          <div className="col-lg-8">
-            <div className="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-              <div className="card-header bg-dark text-white py-3 px-4">
-                <h5 className="mb-0 fw-bold"><i className="bi bi-briefcase me-2"></i> Postes à Pourvoir</h5>
+        {/* --- SECTION POSTES (LISIBILITÉ MAXIMALE) --- */}
+        <div className="row g-4 justify-content-center">
+          <div className="col-lg-10">
+            <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="card-header bg-dark text-white py-3 px-4 d-flex align-items-center justify-content-between">
+                <h4 className="mb-0 fw-bold">📂 RECRUTEMENT DE BÉNÉVOLES</h4>
+                <span className="badge bg-warning text-dark px-3">Parakou</span>
               </div>
-              <div className="card-body p-4 bg-white">
+              
+              <div className="card-body p-4 p-md-5 bg-white">
                 <div className="row">
-                  <div className="col-md-6 mb-4">
-                    <div className="d-flex align-items-center mb-3">
-                        <div className="bg-primary p-1 rounded me-2"></div>
-                        <h6 className="text-primary fw-bold mb-0">Bureau Exécutif</h6>
+                  
+                  {/* BUREAU EXÉCUTIF */}
+                  <div className="col-md-6 mb-5 mb-md-0">
+                    <div className="d-flex align-items-center mb-4 border-bottom border-primary border-3 pb-2">
+                      <i className="bi bi-person-badge-fill text-primary fs-3 me-3"></i>
+                      <h5 className="fw-bold text-dark mb-0 text-uppercase">Bureau Exécutif</h5>
                     </div>
-                    <ul className="list-unstyled">
+                    <div className="list-group list-group-flush">
                       {bureaux.map((p, i) => (
-                        <li key={i} className="py-2 border-bottom border-light small text-secondary">
-                          <span className="text-success me-2">●</span> {p}
-                        </li>
+                        <div key={i} className="list-group-item px-0 py-3 border-light d-flex align-items-center">
+                          <i className="bi bi-check-square-fill text-primary me-3 fs-5"></i>
+                          <span className="fw-bold text-dark fs-5">{p}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
+
+                  {/* CHEFS DE SERVICES */}
                   <div className="col-md-6">
-                    <div className="d-flex align-items-center mb-3">
-                        <div className="bg-success p-1 rounded me-2"></div>
-                        <h6 className="text-success fw-bold mb-0">Chefs de Services</h6>
+                    <div className="d-flex align-items-center mb-4 border-bottom border-success border-3 pb-2">
+                      <i className="bi bi-gear-wide-connected text-success fs-3 me-3"></i>
+                      <h5 className="fw-bold text-dark mb-0 text-uppercase">Chefs de Services</h5>
                     </div>
-                    <div className="pe-2" style={{ maxHeight: '350px', overflowY: 'auto' }}>
+                    <div className="pe-2" style={{ maxHeight: '450px', overflowY: 'auto' }}>
                       {services.map((s, i) => (
-                        <li key={i} className="list-unstyled py-2 border-bottom border-light small text-secondary">
-                          <span className="text-warning me-2">→</span> {s}
-                        </li>
+                        <div key={i} className="list-group-item px-0 py-3 border-light d-flex align-items-start">
+                          <i className="bi bi-arrow-right-circle-fill text-success me-3 fs-5 mt-1"></i>
+                          <span className="fw-bold text-dark fs-5">{s}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
+
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Sidebar : Conditions & Action */}
-          <div className="col-lg-4">
-            <div className="card border-0 shadow-sm rounded-4 mb-4">
-              <div className="card-header bg-success text-white py-3 px-4 rounded-top-4">
-                <h5 className="mb-0 fw-bold">✔️ Critères</h5>
+              {/* SECTION ACTION FINALE */}
+              <div className="card-footer bg-light border-0 p-4 text-center">
+                <div className="mb-4">
+                  <h5 className="fw-bold text-dark mb-2">Objectif de la mandature :</h5>
+                  <p className="text-secondary mx-auto" style={{ maxWidth: '700px' }}>
+                    Renforcer l’organisation administrative et technique afin de contribuer efficacement au développement participatif, citoyen et durable de la commune de Parakou.
+                  </p>
+                </div>
+                <Link to="/postuler" className="btn btn-primary btn-xl px-5 py-3 rounded-pill fw-bold shadow pulse-button">
+                  CLIQUEZ ICI POUR POSTULER <i className="bi bi-cursor-fill ms-2"></i>
+                </Link>
               </div>
-              <div className="card-body p-4">
-                <ul className="list-unstyled">
-                  {["18 à 35 ans", "Résider à Parakou", "Bonne moralité", "Engagement actif"].map((text, i) => (
-                    <li key={i} className="d-flex align-items-center mb-3">
-                      <i className="bi bi-check2-circle text-success fs-4 me-3"></i>
-                      <span className="fw-medium text-dark">{text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="card border-0 shadow-sm rounded-4 bg-white p-4 text-center">
-              <h6 className="fw-bold text-uppercase small text-muted mb-3">Prêt à nous rejoindre ?</h6>
-              <p className="small text-secondary mb-4">Préparez votre CV, Lettre de Motivation et Pièce d'Identité en PDF.</p>
-              <Link to="/postuler" className="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow transition-all hover-lift">
-                POSTULER MAINTENANT
-              </Link>
             </div>
           </div>
         </div>
 
-        <footer className="text-center mt-5 pt-4 border-top">
-          <p className="text-muted small mb-0">
-            &copy; 2025 <strong>AMJB</strong> - Ville de Parakou.
+        {/* --- FOOTER --- */}
+        <footer className="text-center mt-5">
+          <p className="text-muted fw-bold mb-0">
+            &copy; 2025 AMJB - VILLE DE PARAKOU
           </p>
           <div className="d-flex justify-content-center gap-2 mt-2">
-            <div style={{ height: '3px', width: '20px' }} className="bg-success"></div>
-            <div style={{ height: '3px', width: '20px' }} className="bg-warning"></div>
-            <div style={{ height: '3px', width: '20px' }} className="bg-danger"></div>
+            <div style={{ height: '6px', width: '40px' }} className="bg-success rounded"></div>
+            <div style={{ height: '6px', width: '40px' }} className="bg-warning rounded"></div>
+            <div style={{ height: '6px', width: '40px' }} className="bg-danger rounded"></div>
           </div>
         </footer>
+
       </div>
+
+      <style>{`
+        .btn-xl { font-size: 1.25rem; }
+        .fw-bold { color: #212529 !important; } /* Force le noir profond pour la lisibilité */
+        .list-group-item { background: transparent; }
+        .pulse-button {
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
+          70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(13, 110, 253, 0); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+        }
+      `}</style>
     </div>
   );
 }
