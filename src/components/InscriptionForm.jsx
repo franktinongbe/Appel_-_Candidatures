@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // URL de ton API
-const API_URL = "/api/candidats/postuler";
+// URL de ton API sur Vercel
+const API_URL = "https://candidatures-vbs.vercel.app/api/candidats/postuler";
 
 export default function InscriptionForm() {
   const [loading, setLoading] = useState(false);
