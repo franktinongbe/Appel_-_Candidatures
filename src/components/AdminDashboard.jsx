@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 
 // URL de ton API déployée
-const API_URL = "https://candidatures-mjb.vercel.app/api/candidats/liste-privee";
-const FILE_URL = "https://candidatures-mjb.vercel.app"; 
+const API_URL = "https://candidatures-one.vercel.app/api/candidats/liste-privee";
+const FILE_URL = "https://candidatures-one.vercel.app.vercel.app"; 
 
 export default function AdminDashboard() {
   const [candidats, setCandidats] = useState([]);
