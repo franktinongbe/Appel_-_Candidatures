@@ -1,24 +1,25 @@
 import axios from 'axios';
 
-// 1. Configuration de base
-// On s'assure qu'il n'y a pas de slash à la fin
 const API_URL = "https://candidatures-one.vercel.app"; 
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // ⚠️ On ne force pas le Content-Type ici pour laisser 
+  // le navigateur gérer le "boundary" du FormData lors de l'envoi de fichiers.
   withCredentials: true
 });
 
-// 2. Définition des Endpoints
 export const candidatEndpoints = {
-  // Envoyer une nouvelle candidature
-  postuler: (data) => api.post('/api/candidats/postuler', data),
+  // ✅ Envoyer une candidature (Gère les fichiers via FormData)
+  postuler: (formData) => api.post('/api/candidats/postuler', formData, {
+    headers: {
+      // Axios détectera automatiquement le type multipart si vous passez un FormData
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
 
-  // Récupérer tous les candidats (si tu as une interface admin)
-  getAll: () => api.get('/api/candidats'),
+  // Récupérer tous les candidats (Admin)
+  getAll: () => api.get('/api/candidats/liste-privee'),
 
   // Récupérer un candidat par son ID
   getById: (id) => api.get(`/api/candidats/${id}`),

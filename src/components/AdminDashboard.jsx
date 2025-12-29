@@ -10,14 +10,15 @@ export default function AdminDashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/candidats/liste-privee`)
+    // Appel vers la liste privée
+    axios.get(`${API_BASE_URL}/api/candidats/liste-privee`, { withCredentials: true })
       .then(res => {
         setCandidats(res.data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Erreur de chargement:", err);
-        setError("Impossible de charger les données. Vérifiez la connexion au serveur.");
+        console.error("Erreur Cloud:", err);
+        setError("Accès refusé ou serveur injoignable.");
         setLoading(false);
       });
   }, []);
@@ -29,19 +30,22 @@ export default function AdminDashboard() {
       "Poste": c.poste,
       "Téléphone": c.telephone,
       "Email": c.email,
-      "Statut CV": c.cvPath,
-      "Statut ID": c.idPath
+      "Lien CV": `${API_BASE_URL}/${c.cvPath}`,
+      "Lien Identité": `${API_BASE_URL}/${c.idPath}`
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Candidatures");
-    XLSX.writeFile(workbook, `Candidatures_MJB_Parakou_2025.xlsx`);
+    XLSX.writeFile(workbook, `Candidatures_MJB_Parakou.xlsx`);
   };
 
   if (loading) return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="spinner-border text-primary" role="status"></div>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-white">
+      <div className="text-center">
+        <div className="spinner-grow text-success" role="status"></div>
+        <p className="mt-2 fw-bold text-muted">Chargement du Cloud...</p>
+      </div>
     </div>
   );
 
@@ -49,62 +53,62 @@ export default function AdminDashboard() {
     <div className="container-fluid py-5 bg-light min-vh-100">
       <div className="container">
         
-        {error && <div className="alert alert-danger shadow-sm border-0">{error}</div>}
+        {error && <div className="alert alert-danger shadow-sm border-0 border-start border-danger border-4 mb-4">{error}</div>}
 
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-          <div className="mb-3 mb-md-0">
-            <h2 className="fw-bold mb-0 text-dark">Gestion des Candidatures</h2>
-            <p className="text-muted small">Mairie des Jeunes | Parakou 🇧🇯</p>
+          <div>
+            <h2 className="fw-bold mb-0 text-dark">Dossiers de Candidatures</h2>
+            <p className="text-muted small">Administration Mairie des Jeunes de Parakou 🇧🇯</p>
           </div>
           
-          <div className="d-flex gap-2">
-            <button onClick={exportToExcel} className="btn btn-success shadow-sm d-flex align-items-center fw-bold">
-              <i className="bi bi-file-earmark-excel-fill me-2"></i> EXPORTER EXCEL
+          <div className="d-flex gap-3 mt-3 mt-md-0">
+            <button onClick={exportToExcel} className="btn btn-success shadow-sm d-flex align-items-center fw-bold px-4 rounded-pill">
+              <i className="bi bi-download me-2"></i> EXCEL
             </button>
-            <div className="bg-dark text-white rounded-3 px-3 d-flex align-items-center shadow-sm">
-              <span className="fw-bold">{candidats.length}</span>&nbsp;Postulants
+            <div className="bg-dark text-white rounded-pill px-4 d-flex align-items-center shadow-sm">
+              <span className="fw-bold fs-5">{candidats.length}</span>&nbsp;Inscrits
             </div>
           </div>
         </div>
 
-        <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
           <div className="table-responsive">
-            <table className="table table-hover align-middle mb-0 bg-white">
-              <thead className="table-dark text-uppercase small">
+            <table className="table table-hover align-middle mb-0">
+              <thead className="bg-dark text-white">
                 <tr>
                   <th className="ps-4 py-3">Candidat</th>
-                  <th>Poste visé</th>
+                  <th>Poste</th>
                   <th>Contact</th>
-                  <th>Fichiers Reçus</th>
-                  <th>Date d'envoi</th>
+                  <th>Documents</th>
+                  <th>Soumission</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-white">
                 {candidats.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center py-5 text-muted">Aucune candidature reçue pour le moment.</td>
+                    <td colSpan="5" className="text-center py-5">Aucune donnée disponible.</td>
                   </tr>
                 ) : (
                   candidats.map((c) => (
                     <tr key={c._id}>
                       <td className="ps-4">
-                        <div className="fw-bold text-dark">{c.nom}</div>
-                        <div className="text-muted small" style={{fontSize: '0.8rem'}}>{c.email}</div>
+                        <div className="fw-bold text-primary">{c.nom}</div>
+                        <div className="small text-muted">{c.email}</div>
                       </td>
                       <td>
-                        <span className="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-2">
+                        <span className="badge bg-info bg-opacity-10 text-info border px-3 py-2">
                           {c.poste}
                         </span>
                       </td>
                       <td>
-                        <a href={`https://wa.me/${c.telephone.replace(/\s/g, '')}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-success rounded-pill px-3">
-                          <i className="bi bi-whatsapp me-2"></i>WhatsApp
+                        <a href={`https://wa.me/${c.telephone.replace(/\s/g, '')}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-success rounded-pill fw-bold">
+                          <i className="bi bi-whatsapp me-1"></i> WhatsApp
                         </a>
                       </td>
                       <td>
-                        <div className="d-flex flex-column gap-1">
-                          <span className="badge bg-light text-success border small">CV: {c.cvPath}</span>
-                          <span className="badge bg-light text-primary border small">ID: {c.idPath}</span>
+                        <div className="d-flex gap-2">
+                          <a href={`${API_BASE_URL}/${c.cvPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-danger">CV</a>
+                          <a href={`${API_BASE_URL}/${c.idPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-primary">ID</a>
                         </div>
                       </td>
                       <td className="text-muted small">
