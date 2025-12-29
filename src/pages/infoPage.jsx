@@ -68,11 +68,11 @@ export default function InfoPage() {
           {/* --- AFFICHAGE DU TIMING EN TEMPS RÉEL --- */}
           {!isExpired ? (
             <div className="mt-4 d-flex justify-content-center gap-2">
-              <div className="bg-danger text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
+              <div className="bg-success text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
                 <div className="fs-3 fw-bold">{days}</div>
                 <small>Jours</small>
               </div>
-              <div className="bg-primary text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
+              <div className="bg-success text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
                 <div className="fs-3 fw-bold">{hours}</div>
                 <small>Heures</small>
               </div>
@@ -80,7 +80,7 @@ export default function InfoPage() {
                 <div className="fs-3 fw-bold">{minutes}</div>
                 <small>Min</small>
               </div>
-              <div className="bg-primary text-white p-2 rounded shadow-sm border border-white" style={{ minWidth: '70px' }}>
+              <div className="bg-success text-white p-2 rounded shadow-sm border border-white" style={{ minWidth: '70px' }}>
                 <div className="fs-3 fw-bold">{seconds}</div>
                 <small>Sec</small>
               </div>
