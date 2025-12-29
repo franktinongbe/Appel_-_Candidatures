@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
+import axios from 'axios'; // Utiliser axios est plus cohérent avec ton formulaire
 
-// URL de ton API déployée
-const API_URL = "https://candidatures-one.vercel.app/api/candidats/liste-privee";
-const FILE_URL = "https://candidatures-one.vercel.app.vercel.app"; 
+// ✅ CONFIGURATION UNIQUE
+const API_BASE_URL = "https://candidatures-one.vercel.app"; 
 
 export default function AdminDashboard() {
   const [candidats, setCandidats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(data => {
-        setCandidats(data);
+    // Utilisation d'Axios pour la cohérence et la gestion des erreurs
+    axios.get(`${API_BASE_URL}/api/candidats/liste-privee`)
+      .then(res => {
+        setCandidats(res.data);
         setLoading(false);
       })
       .catch(err => {
         console.error("Erreur de chargement:", err);
+        setError("Impossible de charger les données. Vérifiez la connexion au serveur.");
         setLoading(false);
       });
   }, []);
 
-  // Fonction d'exportation vers Excel
   const exportToExcel = () => {
     const dataToExport = candidats.map(c => ({
       "Date": new Date(c.createdAt).toLocaleDateString('fr-FR'),
@@ -30,8 +31,9 @@ export default function AdminDashboard() {
       "Poste": c.poste,
       "Téléphone": c.telephone,
       "Email": c.email,
-      "Lien CV": `${FILE_URL}/${c.cvPath}`,
-      "Lien ID": `${FILE_URL}/${c.idPath}`
+      // On s'assure que le lien vers le fichier est bien construit
+      "Lien CV": `${API_BASE_URL}/${c.cvPath}`,
+      "Lien ID": `${API_BASE_URL}/${c.idPath}`
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -50,7 +52,8 @@ export default function AdminDashboard() {
     <div className="container-fluid py-5 bg-light min-vh-100">
       <div className="container">
         
-        {/* Entête avec bouton d'export */}
+        {error && <div className="alert alert-danger shadow-sm border-0">{error}</div>}
+
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
           <div className="mb-3 mb-md-0">
             <h2 className="fw-bold mb-0 text-dark">Gestion des Candidatures</h2>
@@ -67,7 +70,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Tableau de bord */}
         <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
           <div className="table-responsive">
             <table className="table table-hover align-middle mb-0 bg-white">
@@ -104,8 +106,9 @@ export default function AdminDashboard() {
                       </td>
                       <td>
                         <div className="d-flex gap-2">
-                          <a href={`${FILE_URL}/${c.cvPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-danger px-3 fw-bold">CV</a>
-                          <a href={`${FILE_URL}/${c.idPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-primary px-3 fw-bold">ID</a>
+                          {/* ✅ Correction des liens vers les fichiers */}
+                          <a href={`${API_BASE_URL}/${c.cvPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-danger px-3 fw-bold">CV</a>
+                          <a href={`${API_BASE_URL}/${c.idPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-primary px-3 fw-bold">ID</a>
                         </div>
                       </td>
                       <td className="text-muted small">

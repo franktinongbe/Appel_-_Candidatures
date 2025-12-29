@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-// URL de ton API
-// URL de ton API sur Vercel
-const API_URL = "https://candidatures-one.vercel.app/api/candidats/postuler";
+// ✅ CONFIGURATION : Pas de slash à la fin de l'URL de base
+const API_BASE_URL = "https://candidatures-one.vercel.app";
 
 export default function InscriptionForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null); 
-  
   const [fileNames, setFileNames] = useState({ cv: '', identity: '' });
 
   const postes = [
@@ -28,12 +27,11 @@ export default function InscriptionForm() {
     setLoading(true);
     setError(null);
 
-    // 1. Récupération des infos pour WhatsApp
     const nom = e.target.nom.value;
     const telephone = e.target.telephone.value;
     const poste = e.target.poste.value;
 
-    // 2. Préparation du FormData pour l'API (MongoDB)
+    // 1. Préparation du FormData (Indispensable pour envoyer des fichiers PDF)
     const formData = new FormData();
     formData.append('nom', nom);
     formData.append('telephone', telephone);
@@ -43,12 +41,16 @@ export default function InscriptionForm() {
     formData.append('identite', e.target.idFile.files[0]);
 
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        body: formData,
+      // 2. Envoi avec Axios vers l'endpoint propre
+      // Le chemin devient : https://candidatures-one.vercel.app/api/candidats/postuler
+      const response = await axios.post(`${API_BASE_URL}/api/candidats/postuler`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
       });
 
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         // --- LOGIQUE WHATSAPP ---
         const monNumero = "22940341969"; 
         const messageWhatsApp = `*NOUVELLE CANDIDATURE - MJB*%0A%0A*Nom:* ${nom}%0A*Poste:* ${poste}%0A*Tél:* ${telephone}%0A%0A_Mon dossier a été soumis avec succès sur la plateforme._`;
@@ -57,18 +59,15 @@ export default function InscriptionForm() {
         setSuccess(true);
         window.scrollTo(0, 0);
 
-        // Ouvrir WhatsApp après un court délai
         setTimeout(() => {
           window.open(whatsappUrl, '_blank');
         }, 2000);
-
-      } else {
-        const data = await response.json();
-        throw new Error(data.message || "Une erreur est survenue lors de l'envoi.");
       }
     } catch (err) {
-      console.error("Erreur API:", err);
-      setError(err.message);
+      console.error("Erreur détaillée:", err);
+      // Récupération du message d'erreur du backend s'il existe
+      const errorMessage = err.response?.data?.message || "Erreur de connexion au serveur. Vérifiez votre connexion ou le format des fichiers.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -121,10 +120,10 @@ export default function InscriptionForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="needs-validation">
+          <form onSubmit={handleSubmit}>
             <div className="row g-4">
               <div className="col-12 text-center mb-2">
-                <span className="badge bg-light text-dark border px-3 py-2 rounded-pill">Information Personnelles</span>
+                <span className="badge bg-light text-dark border px-3 py-2 rounded-pill">Informations Personnelles</span>
               </div>
 
               <div className="col-md-12">
@@ -197,7 +196,7 @@ export default function InscriptionForm() {
         </div>
 
         <div className="bg-dark text-white p-4 text-center">
-             <small className="opacity-75">Assistance technique : +229 01 40 34 19 69</small>
+          <small className="opacity-75">Assistance technique : +229 01 40 34 19 69</small>
         </div>
       </div>
 
