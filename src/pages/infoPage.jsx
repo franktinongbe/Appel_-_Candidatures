@@ -1,6 +1,35 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function InfoPage() {
+  // --- LOGIQUE DU COMPTE À REBOURS ---
+  const targetDate = new Date('2026-01-12T00:00:00').getTime();
+  const [timeLeft, setTimeLeft] = useState(targetDate - new Date().getTime());
+  const [isExpired, setIsExpired] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        clearInterval(timer);
+        setIsExpired(true);
+        setTimeLeft(0);
+      } else {
+        setTimeLeft(distance);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  // Calcul des variables de temps
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
   const bureaux = [
     "Directeur de Cabinet", "Chargé(e) de la Communication",
     "Secrétaire Général(e) / Adjoint(e)", "Trésorier(ère) Général(e) / Adjoint(e)",
@@ -31,12 +60,37 @@ export default function InfoPage() {
           <div className="mt-4">
             <h1 className="display-6 fw-bold text-primary mb-0">MAIRIE DES JEUNES DE PARAKOU</h1>
             <div className="badge bg-danger fs-6 px-4 py-2 rounded-pill shadow-sm mt-2">
-              📣 APPEL À CANDIDATURE : MANDATURE 2025-2030
+              📣 APPEL À CANDIDATURE : MANDATURE 2025-2030 <br /> 
+              Du 30 décembre au 12 janvier 2026
             </div>
           </div>
+
+          {/* --- AFFICHAGE DU TIMING EN TEMPS RÉEL --- */}
+          {!isExpired ? (
+            <div className="mt-4 d-flex justify-content-center gap-2">
+              <div className="bg-danger text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
+                <div className="fs-3 fw-bold">{days}</div>
+                <small>Jours</small>
+              </div>
+              <div className="bg-primary text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
+                <div className="fs-3 fw-bold">{hours}</div>
+                <small>Heures</small>
+              </div>
+              <div className="bg-success text-white p-2 rounded shadow-sm" style={{ minWidth: '70px' }}>
+                <div className="fs-3 fw-bold">{minutes}</div>
+                <small>Min</small>
+              </div>
+              <div className="bg-primary text-white p-2 rounded shadow-sm border border-white" style={{ minWidth: '70px' }}>
+                <div className="fs-3 fw-bold">{seconds}</div>
+                <small>Sec</small>
+              </div>
+            </div>
+          ) : (
+            <div className="alert alert-danger mt-4 fw-bold">🛑 Délai expiré le 12 Janvier 2026</div>
+          )}
         </div>
 
-        {/* --- SECTION POSTES (LISIBILITÉ MAXIMALE) --- */}
+        {/* --- SECTION POSTES (VOTRE DESIGN) --- */}
         <div className="row g-4 justify-content-center">
           <div className="col-lg-10">
             <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
@@ -47,8 +101,6 @@ export default function InfoPage() {
               
               <div className="card-body p-4 p-md-5 bg-white">
                 <div className="row">
-                  
-                  {/* BUREAU EXÉCUTIF */}
                   <div className="col-md-6 mb-5 mb-md-0">
                     <div className="d-flex align-items-center mb-4 border-bottom border-primary border-3 pb-2">
                       <i className="bi bi-person-badge-fill text-primary fs-3 me-3"></i>
@@ -64,7 +116,6 @@ export default function InfoPage() {
                     </div>
                   </div>
 
-                  {/* CHEFS DE SERVICES */}
                   <div className="col-md-6">
                     <div className="d-flex align-items-center mb-4 border-bottom border-success border-3 pb-2">
                       <i className="bi bi-gear-wide-connected text-success fs-3 me-3"></i>
@@ -79,11 +130,10 @@ export default function InfoPage() {
                       ))}
                     </div>
                   </div>
-
                 </div>
               </div>
 
-              {/* SECTION ACTION FINALE */}
+              {/* SECTION ACTION FINALE (MODIFIÉE POUR LE BLOCAGE) */}
               <div className="card-footer bg-light border-0 p-4 text-center">
                 <div className="mb-4">
                   <h5 className="fw-bold text-dark mb-2">Objectif de la mandature :</h5>
@@ -91,9 +141,16 @@ export default function InfoPage() {
                     Renforcer l’organisation administrative et technique afin de contribuer efficacement au développement participatif, citoyen et durable de la commune de Parakou.
                   </p>
                 </div>
-                <Link to="/postuler" className="btn btn-primary btn-xl px-5 py-3 rounded-pill fw-bold shadow pulse-button">
-                  CLIQUEZ ICI POUR POSTULER <i className="bi bi-cursor-fill ms-2"></i>
-                </Link>
+                
+                {!isExpired ? (
+                  <Link to="/postuler" className="btn btn-primary btn-xl px-5 py-3 rounded-pill fw-bold shadow pulse-button">
+                    CLIQUEZ ICI POUR POSTULER <i className="bi bi-cursor-fill ms-2"></i>
+                  </Link>
+                ) : (
+                  <button className="btn btn-secondary btn-xl px-5 py-3 rounded-pill fw-bold" disabled>
+                    CANDIDATURES CLOSES
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -101,9 +158,7 @@ export default function InfoPage() {
 
         {/* --- FOOTER --- */}
         <footer className="text-center mt-5">
-          <p className="text-muted fw-bold mb-0">
-            &copy; 2025 AMJB - VILLE DE PARAKOU
-          </p>
+          <p className="text-muted fw-bold mb-0">&copy; 2025 AMJB - VILLE DE PARAKOU</p>
           <div className="d-flex justify-content-center gap-2 mt-2">
             <div style={{ height: '6px', width: '40px' }} className="bg-success rounded"></div>
             <div style={{ height: '6px', width: '40px' }} className="bg-warning rounded"></div>
@@ -115,7 +170,7 @@ export default function InfoPage() {
 
       <style>{`
         .btn-xl { font-size: 1.25rem; }
-        .fw-bold { color: #212529 !important; } /* Force le noir profond pour la lisibilité */
+        .fw-bold { color: #212529 !important; }
         .list-group-item { background: transparent; }
         .pulse-button {
           animation: pulse 2s infinite;
