@@ -1,24 +1,24 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import InfoPage from './pages/infoPage.jsx';
 import InscriptionForm from './components/InscriptionForm';
-import AdminDashboard from './components/AdminDashboard'; // 1. Import de l'admin
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css'; // Pour les icônes WhatsApp/Excel
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Page d'accueil avec les informations */}
+        {/* Page d'accueil : Présentation des postes et critères */}
         <Route path="/" element={<InfoPage />} />
         
-        {/* Formulaire de candidature pour les jeunes */}
+        {/* Page du formulaire : Prépare le message WhatsApp */}
         <Route path="/postuler" element={<InscriptionForm />} />
 
-        {/* 2. Route Admin sécurisée (ne pas partager publiquement) */}
-        <Route path="/admin-prive-mjb-2025" element={<AdminDashboard />} />
+        {/* Note : La route Admin est retirée car avec la méthode WhatsApp Direct, 
+            les données ne sont plus stockées sur un serveur mais reçues sur ton téléphone.
+        */}
         
-        {/* Optionnel : Redirection si la page n'existe pas */}
+        {/* Redirection automatique pour éviter les erreurs 404 */}
         <Route path="*" element={<InfoPage />} />
       </Routes>
     </Router>
