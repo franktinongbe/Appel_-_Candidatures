@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import axios from 'axios'; // Utiliser axios est plus cohérent avec ton formulaire
+import axios from 'axios';
 
-// ✅ CONFIGURATION UNIQUE
 const API_BASE_URL = "https://candidatures-one.vercel.app"; 
 
 export default function AdminDashboard() {
@@ -11,7 +10,6 @@ export default function AdminDashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Utilisation d'Axios pour la cohérence et la gestion des erreurs
     axios.get(`${API_BASE_URL}/api/candidats/liste-privee`)
       .then(res => {
         setCandidats(res.data);
@@ -31,9 +29,8 @@ export default function AdminDashboard() {
       "Poste": c.poste,
       "Téléphone": c.telephone,
       "Email": c.email,
-      // On s'assure que le lien vers le fichier est bien construit
-      "Lien CV": `${API_BASE_URL}/${c.cvPath}`,
-      "Lien ID": `${API_BASE_URL}/${c.idPath}`
+      "Statut CV": c.cvPath,
+      "Statut ID": c.idPath
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -78,7 +75,7 @@ export default function AdminDashboard() {
                   <th className="ps-4 py-3">Candidat</th>
                   <th>Poste visé</th>
                   <th>Contact</th>
-                  <th>Documents PDF</th>
+                  <th>Fichiers Reçus</th>
                   <th>Date d'envoi</th>
                 </tr>
               </thead>
@@ -105,10 +102,9 @@ export default function AdminDashboard() {
                         </a>
                       </td>
                       <td>
-                        <div className="d-flex gap-2">
-                          {/* ✅ Correction des liens vers les fichiers */}
-                          <a href={`${API_BASE_URL}/${c.cvPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-danger px-3 fw-bold">CV</a>
-                          <a href={`${API_BASE_URL}/${c.idPath}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-primary px-3 fw-bold">ID</a>
+                        <div className="d-flex flex-column gap-1">
+                          <span className="badge bg-light text-success border small">CV: {c.cvPath}</span>
+                          <span className="badge bg-light text-primary border small">ID: {c.idPath}</span>
                         </div>
                       </td>
                       <td className="text-muted small">
