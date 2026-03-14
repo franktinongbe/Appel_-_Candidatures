@@ -52,7 +52,7 @@ export default function InfoPage() {
           <div className="mt-4 px-2">
             <h1 className="fw-bold text-primary mb-2 responsive-h1">MAIRIE DES JEUNES DE PARAKOU</h1>
             <div className="badge bg-primary text-wrap p-3 rounded-4 shadow-sm mt-2 w-100 w-md-auto" style={{ maxWidth: '600px' }}>
-              <span className="fs-6">📝 CAMPAGNE D'ADHÉSION : ÉDITION 2026</span>
+              <span className="fs-6">📝 APPEL A ADHÉSION : ÉDITION 2026</span>
               <div className="small opacity-75 mt-1 text-white">Rejoignez le mouvement pour Parakou</div>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function InfoPage() {
               ))}
             </div>
           ) : (
-            <div className="alert alert-danger mt-4 fw-bold mx-2">🛑 Les adhésions en ligne sont clôturées.</div>
+            <div className="alert alert-danger mt-4 fw-bold mx-2"> Les adhésions en ligne continues.</div>
           )}
         </div>
 
@@ -106,7 +106,7 @@ export default function InfoPage() {
                 </div>
                 
                 {!isExpired ? (
-                  <Link to="/inscription" className="btn btn-success w-100 w-md-auto px-md-5 py-3 rounded-pill fw-bold shadow pulse-button">
+                  <Link to="/postuler" className="btn btn-success w-100 w-md-auto px-md-5 py-3 rounded-pill fw-bold shadow pulse-button">
                     REMPLIR LE FORMULAIRE <i className="bi bi-pencil-square ms-2"></i>
                   </Link>
                 ) : (
