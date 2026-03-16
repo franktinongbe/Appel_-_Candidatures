@@ -19,7 +19,7 @@ function App() {
         */}
         
         {/* Redirection automatique pour éviter les erreurs 404 */}
-        <Route path="*" element={<InfoPage />} />
+        <Route path="/" element={<InfoPage />} />
       </Routes>
     </Router>
   );
