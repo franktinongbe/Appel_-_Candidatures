@@ -72,7 +72,7 @@ export default function InscriptionForm() {
           <SectionLabel>Identité</SectionLabel>
           <div style={styles.grid2}>
             <Field label="Nom et prénoms *">
-              <input name="nomPrenoms" placeholder="Ex : Adjoua Marie Koto" onChange={handleChange} style={styles.input} required />
+              <input name="nomPrenoms" placeholder="Ex : Marie Thérèse Koto" onChange={handleChange} style={styles.input} required />
             </Field>
             <Field label="Âge *">
               <input name="age" type="number" placeholder="Ex : 22" onChange={handleChange} style={styles.input} required />
