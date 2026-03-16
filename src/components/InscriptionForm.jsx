@@ -7,7 +7,7 @@ export default function InscriptionForm() {
   const [formData, setFormData] = useState({
     nomPrenoms: '', age: '', sexe: '', whatsapp: '', quartier: '',
     profession: '', niveauEtude: '', motivation: '', domaines: [],
-    experienceBenevole: null
+    experienceBenevole: ''
   });
 
   const handleChange = (e) => {
@@ -26,32 +26,57 @@ export default function InscriptionForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.nomPrenoms || !formData.age || !formData.sexe || !formData.experienceBenevole) {
-      alert('Veuillez remplir tous les champs obligatoires.');
+    if (!formData.nomPrenoms || !formData.age || !formData.sexe) {
+      alert('Veuillez remplir les champs obligatoires (*).');
+      return;
+    }
+    const phoneRegex = /^[0-9]{8}$/;
+    if (!phoneRegex.test(formData.whatsapp.replace(/\s/g, ''))) {
+      alert('Numéro WhatsApp invalide — 8 chiffres requis.');
       return;
     }
     
     setIsSubmitting(true);
-    const message = `*CANDIDATURE MJB*%0A%0A*Nom:* ${formData.nomPrenoms}%0A*Âge:* ${formData.age}%0A*Sexe:* ${formData.sexe}%0A*WhatsApp:* ${formData.whatsapp}%0A*Domaines:* ${formData.domaines.join(', ')}%0A*Déjà bénévole:* ${formData.experienceBenevole}`;
+
+    const message = `*NOUVELLE CANDIDATURE MJB*%0A%0A` +
+      `*Nom et prénoms :* ${formData.nomPrenoms}%0A` +
+      `*Âge :* ${formData.age}%0A` +
+      `*Sexe :* ${formData.sexe}%0A` +
+      `*WhatsApp :* ${formData.whatsapp}%0A` +
+      `*Quartier :* ${formData.quartier}%0A` +
+      `*Niveau d'étude :* ${formData.niveauEtude}%0A` +
+      `*Profession :* ${formData.profession}%0A` +
+      `*Motivation :* ${formData.motivation}%0A` +
+      `*Domaines :* ${formData.domaines.join(', ')}%0A` +
+      `*Bénévole :* ${formData.experienceBenevole}%0A%0A` +
+      `---%0A*Lien du groupe :* https://chat.whatsapp.com/Czznaibnrdc8PXnkXrYS1R`;
+
     window.location.href = `https://wa.me/2290140341969?text=${message}`;
+    
     setTimeout(() => setIsSubmitting(false), 2000);
   };
 
   return (
     <div style={styles.wrap}>
+      <div style={styles.glowTop} />
+      <div style={styles.glowBottom} />
       <div style={styles.card}>
         <div style={styles.header}>
           <span style={styles.badge}>Parakou — Bénin</span>
-          <h1 style={styles.title}>Rejoindre la <span style={styles.titleGold}>MJB</span></h1>
+          <h1 style={styles.title}>Rejoindre la <span style={styles.titleGold}>Mairie des Jeunes</span></h1>
+          <p style={styles.subtitle}>Formulaire d'adhésion officiel · Promotion 2026</p>
+          <div style={styles.divider} />
         </div>
 
         <form onSubmit={handleSubmit} style={styles.form}>
-          <Field label="Nom et prénoms *">
-            <input name="nomPrenoms" onChange={handleChange} style={styles.input} required />
-          </Field>
-          
+          <SectionLabel>Identité</SectionLabel>
           <div style={styles.grid2}>
-            <Field label="Âge *"><input name="age" type="number" onChange={handleChange} style={styles.input} required /></Field>
+            <Field label="Nom et prénoms *">
+              <input name="nomPrenoms" placeholder="Ex : Adjoua Marie Koto" onChange={handleChange} style={styles.input} required />
+            </Field>
+            <Field label="Âge *">
+              <input name="age" type="number" placeholder="Ex : 22" onChange={handleChange} style={styles.input} required />
+            </Field>
             <Field label="Sexe *">
               <select name="sexe" onChange={handleChange} style={styles.input} required defaultValue="">
                 <option value="" disabled>Choisir...</option>
@@ -59,30 +84,48 @@ export default function InscriptionForm() {
                 <option value="F">Féminin</option>
               </select>
             </Field>
+            <Field label="WhatsApp *">
+              <input name="whatsapp" placeholder="Ex : 97000000" onChange={handleChange} style={styles.input} required />
+            </Field>
           </div>
+
+          <SectionLabel>Profil</SectionLabel>
+          <div style={{ ...styles.grid2, marginBottom: '1.5rem' }}>
+            <Field label="Quartier"><input name="quartier" onChange={handleChange} style={styles.input} /></Field>
+            <Field label="Niveau d'étude"><input name="niveauEtude" onChange={handleChange} style={styles.input} /></Field>
+            <div style={{ gridColumn: 'span 2' }}>
+              <Field label="Profession / Activité"><input name="profession" onChange={handleChange} style={styles.input} /></Field>
+            </div>
+          </div>
+
+          <SectionLabel>Engagement</SectionLabel>
+          <Field label="Pourquoi nous rejoindre ?" style={{ marginBottom: '1.5rem' }}>
+            <textarea name="motivation" onChange={handleChange} style={{ ...styles.input, height: 88, resize: 'none' }} />
+          </Field>
 
           <SectionLabel>Domaines d'intérêt</SectionLabel>
-          <div style={styles.chipGrid}>
+          <div style={styles.checkboxGrid}>
             {DOMAINES.map(dom => (
-              <div key={dom} onClick={() => toggleDomaine(dom)} 
-                   style={{...styles.chip, ...(formData.domaines.includes(dom) ? styles.chipActive : {})}}>
+              <label key={dom} onClick={() => toggleDomaine(dom)} style={{ ...styles.cbLabel, ...(formData.domaines.includes(dom) ? styles.cbLabelChecked : {}) }}>
                 {dom}
-              </div>
+              </label>
             ))}
           </div>
 
-          <SectionLabel>Déjà bénévole ? *</SectionLabel>
-          <div style={styles.chipGrid}>
-            {['Oui', 'Non'].map(val => (
-              <div key={val} onClick={() => setFormData(p => ({ ...p, experienceBenevole: val }))} 
-                   style={{...styles.chip, ...(formData.experienceBenevole === val ? styles.chipActive : {})}}>
-                {val}
-              </div>
-            ))}
+          <SectionLabel>Bénévolat</SectionLabel>
+          <div style={styles.radioRow}>
+            <span>Déjà bénévole ?</span>
+            <div style={styles.radios}>
+              {['Oui', 'Non'].map(val => (
+                <label key={val} onClick={() => setFormData(p => ({ ...p, experienceBenevole: val }))} style={styles.radioLabel}>
+                  {val}
+                </label>
+              ))}
+            </div>
           </div>
 
           <button type="submit" disabled={isSubmitting} style={styles.btn}>
-            {isSubmitting ? "Envoi..." : "Soumettre la candidature"}
+            {isSubmitting ? "Envoi en cours..." : "Soumettre via WhatsApp →"}
           </button>
         </form>
       </div>
@@ -90,25 +133,35 @@ export default function InscriptionForm() {
   );
 }
 
-const SectionLabel = ({ children }) => <div style={styles.sectionLabel}>{children}</div>;
-const Field = ({ label, children }) => <div style={{ marginBottom: '1rem' }}>
-  <label style={styles.fieldLabel}>{label}</label>{children}
-</div>;
+function SectionLabel({ children }) {
+  return <div style={styles.sectionLabel}>{children}<span style={styles.sectionLine} /></div>;
+}
+
+function Field({ label, children }) {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <label style={styles.fieldLabel}>{label}</label>{children}
+  </div>;
+}
 
 const styles = {
-  wrap: { fontFamily: "'Inter', sans-serif", background: '#0B1D3A', minHeight: '100vh', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  card: { maxWidth: 500, width: '100%', background: 'rgba(255,255,255,0.03)', padding: '2rem', borderRadius: 24, border: '1px solid rgba(255,255,255,0.05)' },
+  wrap: { fontFamily: "'DM Sans', sans-serif", background: '#0B1D3A', minHeight: '100vh', padding: '2rem 1rem' },
+  card: { maxWidth: 660, margin: '0 auto' },
   header: { textAlign: 'center', marginBottom: '2rem' },
-  badge: { background: 'rgba(212,175,55,0.15)', color: '#D4AF37', padding: '4px 12px', borderRadius: 20, fontSize: 10, textTransform: 'uppercase' },
-  title: { color: '#fff', fontSize: 22, marginTop: '10px' },
+  badge: { background: 'rgba(212,175,55,0.15)', color: '#D4AF37', padding: '6px 18px', borderRadius: 100, fontSize: 11, textTransform: 'uppercase' },
+  title: { color: '#fff', fontSize: 28, margin: '1rem 0' },
   titleGold: { color: '#D4AF37' },
-  form: { display: 'flex', flexDirection: 'column' },
-  sectionLabel: { color: '#D4AF37', fontSize: 10, textTransform: 'uppercase', margin: '15px 0 10px', letterSpacing: '0.5px' },
-  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 },
-  fieldLabel: { fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 5, display: 'block' },
-  input: { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '12px', color: '#fff', width: '100%', boxSizing: 'border-box' },
-  chipGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 },
-  chip: { background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: 10, cursor: 'pointer', textAlign: 'center', color: '#fff', fontSize: 12, transition: '0.3s' },
-  chipActive: { background: '#D4AF37', color: '#0B1D3A', fontWeight: 'bold' },
-  btn: { width: '100%', padding: 16, borderRadius: 12, border: 'none', background: '#D4AF37', color: '#0B1D3A', fontWeight: 700, marginTop: '2rem', cursor: 'pointer' }
+  subtitle: { color: 'rgba(255,255,255,0.45)', fontSize: 13 },
+  divider: { width: 48, height: 2, background: '#D4AF37', margin: '1rem auto' },
+  form: { background: 'rgba(255,255,255,0.04)', padding: '2rem', borderRadius: 20 },
+  sectionLabel: { color: '#D4AF37', fontSize: 10, textTransform: 'uppercase', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 10 },
+  sectionLine: { flex: 1, height: 1, background: 'rgba(212,175,55,0.2)' },
+  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: '1rem' },
+  fieldLabel: { fontSize: 11, color: 'rgba(255,255,255,0.45)' },
+  input: { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '11px', color: '#fff', width: '100%', outline: 'none' },
+  checkboxGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: '1.5rem' },
+  cbLabel: { background: 'rgba(255,255,255,0.04)', padding: '10px', borderRadius: 10, cursor: 'pointer', textAlign: 'center', color: '#fff', fontSize: 12 },
+  cbLabelChecked: { background: '#D4AF37', color: '#0B1D3A' },
+  radioRow: { background: 'rgba(255,255,255,0.04)', padding: '14px', borderRadius: 10, display: 'flex', justifyContent: 'space-between', color: '#fff', marginBottom: '1.5rem' },
+  radioLabel: { cursor: 'pointer', marginLeft: '10px' },
+  btn: { width: '100%', padding: 15, borderRadius: 12, border: 'none', background: '#D4AF37', color: '#0B1D3A', fontWeight: 700, cursor: 'pointer' }
 };
