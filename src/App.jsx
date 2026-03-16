@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import InfoPage from './pages/infoPage.jsx';
 import InscriptionForm from './components/InscriptionForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,18 +8,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Page d'accueil : Présentation des postes et critères */}
+        {/* Page d'accueil */}
         <Route path="/" element={<InfoPage />} />
         
-        {/* Page du formulaire : Prépare le message WhatsApp */}
+        {/* Page du formulaire */}
         <Route path="/postuler" element={<InscriptionForm />} />
 
-        {/* Note : La route Admin est retirée car avec la méthode WhatsApp Direct, 
-            les données ne sont plus stockées sur un serveur mais reçues sur ton téléphone.
-        */}
-        
-        {/* Redirection automatique pour éviter les erreurs 404 */}
-        <Route path="/" element={<InfoPage />} />
+        {/* Si l'utilisateur tape une adresse inexistante, il revient à l'accueil */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
